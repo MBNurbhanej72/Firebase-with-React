@@ -69,7 +69,14 @@ const SignUp = () => {
         //? Send verification mail
         sendEmailVerification(user, { url: "http://localhost:5173/" })
 
-          .then(() => toast.info("Verification email sent. Please verify your email to continue."))
+          .then(() => {
+            setEmail("");
+
+            setPassword("");
+
+            
+            toast.info("Verification email sent. Please verify your email to continue.");
+          })
 
           .catch(() => toast.error("Failed to send verification email"));
       })
