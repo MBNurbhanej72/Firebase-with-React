@@ -2,6 +2,8 @@ import "../App.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { FcGoogle } from "react-icons/fc";
+import { FaFacebookF, FaGithub } from "react-icons/fa";
 
 
 
@@ -11,7 +13,7 @@ import { auth } from "../config/firebase";
 
 
 //? For sign in user using email & password, Google.
-import { signInWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, sendPasswordResetEmail } from "firebase/auth";
+import { signInWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, sendPasswordResetEmail, FacebookAuthProvider } from "firebase/auth";
 
 
 
@@ -49,7 +51,7 @@ const Login = () => {
     setIsLoading(true);
 
 
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, email.trim(), password)
 
       .then(res => {
         console.log(res?._tokenResponse);
@@ -61,10 +63,10 @@ const Login = () => {
         toast.success("Logged in successfully 🎉");
       })
 
-      .catch(err => toast.error(err.code
+      .catch(err => toast.error(err?.code
         .replace("auth/", "")
         .replace(/-/g, " ")
-        .replace(/^\w/, (c) => c.toUpperCase())))
+        .replace(/^\w/, (c) => c?.toUpperCase())))
 
       .finally(() => {
         setIsLoading(false);
@@ -72,13 +74,13 @@ const Login = () => {
 
 
 
-    //? signInWithEmailAndPassword() for sign in using email & password. This take three params first auth, second email and third password.
+    //? signInWithEmailAndPassword() for sign in using email & password. It takes three params first auth, second email and third password.
 
   };
 
 
 
-  // *****  Reset Password using Email  ***** ////
+  // *****  Reset Password using email  ***** ////
 
   const resetPassword = () => {
 
@@ -91,14 +93,14 @@ const Login = () => {
     setIsLoading(true);
 
 
-    sendPasswordResetEmail(auth, email, { url: "http://localhost:5173/" })
+    sendPasswordResetEmail(auth, email.trim(), { url: "http://localhost:5173/" })
 
-      .then(() => toast.success("Password reset email sent 📩"))
+      .then(() => toast.info("Password reset email sent 📩"))
 
-      .catch(err => toast.error(err.code
+      .catch(err => toast.error(err?.code
         .replace("auth/", "")
         .replace(/-/g, " ")
-        .replace(/^\w/, (c) => c.toUpperCase())))
+        .replace(/^\w/, (c) => c?.toUpperCase())))
 
       .finally(() => {
         setIsLoading(false);
@@ -106,7 +108,7 @@ const Login = () => {
 
 
 
-    //? sendPasswordResetEmail() for reset password using email. This take three params first auth, second param pass email and third param optional which is {url: "http://localhost:5173/"}. When we pass url then firebase reset password popup redirect to our website or when not pass url param so not redirect to our website. 
+    //? sendPasswordResetEmail() for reset password using email. It takes three params first auth, second param pass email and third param optional which is {url: "http://localhost:5173/"}. When we pass url then firebase reset password popup redirect to our website or when not pass url param so not redirect to our website. 
 
   };
 
@@ -133,10 +135,10 @@ const Login = () => {
         toast.success("Logged in with Google successfully 🎉");
       })
 
-      .catch(err => toast.error(err.code
+      .catch(err => toast.error(err?.code
         .replace("auth/", "")
         .replace(/-/g, " ")
-        .replace(/^\w/, (c) => c.toUpperCase())))
+        .replace(/^\w/, (c) => c?.toUpperCase())))
 
       .finally(() => {
         setIsLoading(false);
@@ -144,7 +146,7 @@ const Login = () => {
 
 
 
-    //? signInWithPopup() for open Google popup. This take two params first auth and second Google provider instance.
+    //? signInWithPopup() for open Google popup. It takes two params first auth and second Google provider instance.
 
   };
 
@@ -171,10 +173,10 @@ const Login = () => {
         toast.success("Logged in with GitHub successfully 🎉");
       })
 
-      .catch(err => toast.error(err.code
+      .catch(err => toast.error(err?.code
         .replace("auth/", "")
         .replace(/-/g, " ")
-        .replace(/^\w/, (c) => c.toUpperCase())))
+        .replace(/^\w/, (c) => c?.toUpperCase())))
 
       .finally(() => {
         setIsLoading(false);
@@ -182,63 +184,110 @@ const Login = () => {
 
 
 
-    //? signInWithPopup() for open GitHub popup. This take two params first auth and second GitHub provider instance.
+    //? signInWithPopup() for open GitHub popup. It takes two params first auth and second GitHub provider instance.
 
   };
 
 
 
-  if (isLoading) return <div className="loader-main"><span className="loader" /></div>;
+  // *****  Login with Facebook  ***** ////
+
+  const facebookProvider = new FacebookAuthProvider();
+
+  const signInWithFacebook = () => {
+
+    setIsLoading(true);
+
+
+    signInWithPopup(auth, facebookProvider)
+
+      .then(res => {
+        console.log(res?._tokenResponse);
+
+        console.log(res?.user);
+
+        navigate("/");
+
+        toast.success("Logged in with Facebook successfully 🎉");
+      })
+
+      .catch(err => toast.error(err?.code
+        .replace("auth/", "")
+        .replace(/-/g, " ")
+        .replace(/^\w/, (c) => c?.toUpperCase())))
+
+      .finally(() => {
+        setIsLoading(false);
+      });
+
+
+
+    //? signInWithPopup() for open Facebook popup. It takes two params first auth and second Facebook provider instance.
+
+  };
 
 
 
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Welcome Back 👋</h2>
-        <p className="subtitle">Please sign in to your account</p>
+        <div>
+          <h2>Welcome Back 👋</h2>
+          <p className="subtitle">Please sign in to your account</p>
+        </div>
 
-        <form>
-          {/* Email */}
-          <div className="form-group">
-            <label>Email</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" />
-          </div>
+        {isLoading ? <span className="loader" /> :
 
-          {/* Password */}
-          <div className="form-group">
-            <label>Password</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" />
-          </div>
+          <form>
+            {/* Email */}
+            <div className="form-group">
+              <label>Email</label>
+              <input type="email" value={email} autoComplete="email" onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" />
+            </div>
 
-          {/* Forgot password */}
-          <div className="forgot-row">
-            <span style={{ cursor: "pointer" }} onClick={resetPassword}>Forgot password?</span>
-          </div>
+            {/* Password */}
+            <div className="form-group">
+              <label>Password</label>
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" />
+            </div>
 
-          {/* Submit */}
-          <button className="btn-primary" onClick={handleLoginUser}>Sign In</button>
+            {/* Forgot password */}
+            <div className="forgot-row">
+              <span style={{ cursor: "pointer" }} onClick={resetPassword}>Forgot password?</span>
+            </div>
 
-          {/* Divider */}
-          <div className="divider">
-            <span>OR</span>
-          </div>
+            {/* Submit */}
+            <button className="btn-primary" onClick={handleLoginUser}>Sign In</button>
 
-          {/* Social Login */}
-          <button type="button" className="btn-social google" onClick={signInWithGoogle}>
-            Continue with Google
-          </button>
+            {/* Divider */}
+            <div className="divider">
+              <span>OR</span>
+            </div>
 
-          <button type="button" className="btn-social github" onClick={signInWithGitHub}>
-            Continue with GitHub
-          </button>
+            {/* Social Login */}
+            <div className="btn-social-main">
+              <button type="button" className="btn-social google" onClick={signInWithGoogle}>
+                <FcGoogle size={20} />
+              </button>
 
-          <p className="switch-auth">
-            Don’t have an account? <span onClick={() => navigate("/signup")}>Sign Up</span>
-          </p>
-        </form>
-      </div>
-    </div>
+              <button type="button" className="btn-social github" onClick={signInWithGitHub}>
+                <FaGithub size={20} />
+              </button>
+
+              <button type="button" className="btn-social facebook" onClick={signInWithFacebook}>
+                <FaFacebookF size={20} />
+              </button>
+            </div>
+
+            <p className="switch-auth">
+              Don’t have an account? <span onClick={() => navigate("/signup")}>Sign Up</span>
+            </p>
+          </form>
+
+        }
+
+      </div >
+    </div >
   );
 };
 

@@ -9,17 +9,12 @@ import { push, ref, set } from "firebase/database";
 
 
 
-//? For fire store database.
-import { addDoc, collection } from "firebase/firestore";
-
-
-
 //? Import real time database instances from firebase configuration.
 import { realTimeDB } from "../config/firebase";
 
 
 
-const Database = () => {
+const RealTimeDatabase = () => {
 
   const [city, setCity] = useState("");
 
@@ -29,7 +24,7 @@ const Database = () => {
 
 
 
-  // *****  RealTime Database  ***** ////
+  // *****  Realtime database  ***** ////
 
   const handleSubmit = (e) => {
 
@@ -46,7 +41,6 @@ const Database = () => {
 
     if (Number.isNaN(pin)) {
       toast.error("Pincode must be a valid number");
-      setIsLoading(false);
       return;
     }
 
@@ -55,7 +49,7 @@ const Database = () => {
 
 
     push((ref(realTimeDB, "cities")), {   //? set(ref(realDB, "cities/1"), {city:city, pincode:pincode})
-      city: city,
+      cityName: city.trim(),
       pincode: pin
     })
 
@@ -64,15 +58,12 @@ const Database = () => {
 
 
         //? *** For nested data entry in database. 
-        const cityId = res.key;
+        const cityId = res?.key;
 
-        push(ref(realTimeDB, `cities/${cityId}/areas`), {
-          name: "Main Area",
-          code: 72,
-        });
-        //? *** 
+        return push(ref(realTimeDB, `cities/${cityId}/areas`), ["hmt", "ahm", "del"]);
+      })
 
-
+      .then(() => {
         toast.success("Data added successfully 🎉");
 
         setCity("");
@@ -80,10 +71,10 @@ const Database = () => {
         setPincode("");
       })
 
-      .catch(err => toast.error(err.code
+      .catch(err => toast.error(err?.code
         .replace("auth/", "")
         .replace(/-/g, " ")
-        .replace(/^\w/, (c) => c.toUpperCase())))
+        .replace(/^\w/, (c) => c?.toUpperCase())))
 
       .finally(() => {
         setIsLoading(false);
@@ -94,46 +85,13 @@ const Database = () => {
     // ! In push() id generate automatically and in set() it's not possible.
 
 
-    //? push() or set() for save data in database. This take two param first ref() and second pass the data, in ref() this take two param first pass database instance and second is folder path or name where data will be stored. 
+    //? push() or set() for save data in database. It takes two params first ref() and second pass the data, in ref() it takes two params first pass database instance and second is name of collection where data will be stored. 
 
   };
 
 
 
-  // *****  Fire Store Database  ***** ////
-
-  // const handleSubmit = (e) => {
-
-  // e.preventDefault();
-
-
-  // if (!city || !pincode) {
-  //   toast.error("Please fill all fields");
-  //   return;
-  // }
-
-
-  // setIsLoading(true);
-
-
-
-  //   addDoc(collection(db, "cities"), {
-  //     city,
-  //     pincode
-  //   })
-
-  //     .then(res => console.log(res))
-
-  //     .catch(err => toast.error(err.code
-  //       .replace("auth/", "")
-  //       .replace(/-/g, " ")
-  //       .replace(/^\w/, (c) => c.toUpperCase())))
-
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     });
-
-  // };
+  // *****  Read / Get data  ***** ////
 
 
 
@@ -170,4 +128,4 @@ const Database = () => {
   );
 };
 
-export default Database;
+export default RealTimeDatabase;

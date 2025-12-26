@@ -10,7 +10,7 @@
 
 1. Create a Firebase project.
 
-2. Register your app. ---> Aana mate go to firebase console --> open firebase project --> firebase project settings --> general tab --> niche last heading hse  ![There are no apps in your project](RegisterApp.png) ema web select krvanu.
+2. Register your app. ---> Aana mate go to firebase console --> open firebase project --> firebase project settings --> general tab --> niche last heading hse  ![There are no apps in your project](Register-App.png) ema web select krvanu.
 
 3. App nu name aapvanu je project nu name hoy e.
 
@@ -23,15 +23,28 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+
+  //? For realtime database
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL
 };
 
 const app = initializeApp(firebaseConfig);
+
+
+//? Create realtime database instance
+export const realTimeDB = getDatabase(app);
+
+//? Create authentication instance
+export const auth = getAuth(app);
+
+//? Create firestore database instance
+export const db = getFirestore(app);
 
 
 
@@ -44,6 +57,145 @@ const app = initializeApp(firebaseConfig);
 
 
 ##### Services #####
+
+
+
+### Authentication ###
+
+1. Open  https://firebase.google.com/docs/auth/web/start
+
+2. Create instance of authentication firebase config file and export it.
+
+<!--* import { getAuth } from "firebase/auth"; -->
+
+<!--* export const auth = getAuth(app); -->
+
+
+## For Signup user with email and password, go to SignUp.jsx file ##
+
+https://firebase.google.com/docs/auth/web/start#sign_up_new_users
+
+
+## For Signup user with email, password and verify email, go to SignUp.jsx file ##
+
+https://firebase.google.com/docs/auth/web/manage-users#send_a_user_a_verification_email
+
+Sender name :- Company_Name
+From :- Company_Name
+Subject :- Verify your email for Project_Name 
+
+
+## For SignIn user with email and password, go to Login.jsx file ##
+
+https://firebase.google.com/docs/auth/web/start#sign_in_existing_users
+
+
+## For Reset Password, go to Login.jsx ##
+
+https://firebase.google.com/docs/auth/web/manage-users#send_a_password_reset_email
+
+![Authentication -> Templates -> Password Reset](Reset-Password-Template.png)
+
+Sender name :- Company_Name
+From :- Company_Name
+Subject :- Reset Your Password – Project_Name 
+Message :- <p>Hello,</p>
+
+  <p>
+  We received a request to reset the password for your
+  <strong>Project_Name</strong> account associated with
+  <strong>%EMAIL%</strong>.
+  </p>
+
+  <p>
+  Click the link below to securely reset your password:
+  </p>
+
+  <p>
+  <a href="%LINK%" style="color:#1a73e8; font-weight:600;">
+  Reset Your Password
+  </a>
+  </p>
+
+  <p>
+  This link will expire soon for security reasons.
+  </p>
+
+  <p>
+  If you did not request a password reset, please ignore this email.
+  Your account will remain secure.
+  </p>
+
+  <p>
+  Thanks,<br />
+  <strong>Project_Name Team</strong>
+  </p>
+
+
+## For Logout user, go to Home.jsx ##
+
+onAuthStateChanged() -->  https://firebase.google.com/docs/auth/web/start#set_an_authentication_state_observer_and_get_user_data
+
+SignOut(auth) -->  https://firebase.google.com/docs/auth/web/password-auth#next_steps
+
+
+## For Signup / SignIn user with phone number, go to SignUp.jsx or Login.jsx file ##
+
+https://firebase.google.com/docs/auth/web/phone-auth
+
+
+## For Signup / SignIn user with google, go to SignUp.jsx or Login.jsx file ##
+
+https://firebase.google.com/docs/auth/web/google-signin
+
+
+## For Signup / SignIn user with facebook, go to SignUp.jsx or Login.jsx file ##
+
+https://firebase.google.com/docs/auth/web/facebook-login
+
+◉ Go to -->  https://developers.facebook.com
+
+1. Create App
+2. App Name
+3. Select Authenticate and request data from users with Facebook Login
+4. Select I don't want to connect a business portfolio yet
+5. Then click Next until Go to dashboard appears.
+6. App Settings --> Basic --> Show App ID & App secret
+7. Go to Dashboard --> Click Customize the Authenticate and request data from users with Facebook Login use case
+8. Go to Permissions and features --> Add email
+9. Go to Settings --> Scroll down --> Valid OAuth Redirect URIs --> Paste url from Firebase Authentication (Facebook provider)
+10. Save changes
+
+
+## For Signup / SignIn user with github, go to SignUp.jsx or Login.jsx file ##
+
+https://firebase.google.com/docs/auth/web/github-auth
+
+◉ Client ID & Client secret :- Go to GitHub settings --> Developer Settings --> New GitHub App
+
+1. GitHub App name 
+2. Homepage URL --> like  http://localhost:5173 or website domain
+3. Callback URL --> Add the callback URL from Firebase Authentication (GitHub provider) here
+4. Webhook --> Deactivate the active checkbox
+5. Select Only on this account
+6. Create GitHub App
+7. Show Client ID:
+8. Generate a new client secret and copy it
+9. Paste both url in Firebase Authentication (GitHub provider)
+10. Click outside the Client secret box --->  Save
+
+
+## For Signup / SignIn user with apple ##
+
+https://firebase.google.com/docs/auth/web/apple
+
+
+## For Signup / SignIn user with twitter ##
+
+https://firebase.google.com/docs/auth/web/twitter-login
+
+
+
 
 
 ### Realtime Database ###
@@ -69,56 +221,32 @@ const app = initializeApp(firebaseConfig);
 8. Scroll down --> Read and write data. -->  https://firebase.google.com/docs/database/web/read-and-write
 
 
-## For Write Data go to App.jsx file ##
+# For Read / Write Real Time Data, go to RealTimeDatabase.jsx file #
 
 
 
-### Authentication ###
-
-1. Open  https://firebase.google.com/docs/auth/web/start
-
-2. Create instance of authentication firebase config file and export it.
-
-<!--* import { getAuth } from "firebase/auth"; -->
-
-<!--* export const auth = getAuth(app); -->
 
 
-## For Signup / SignIn data with email and password go to App.jsx file ##
+### Firestore Database ###
 
-https://firebase.google.com/docs/auth/web/password-auth
+1. Open  https://firebase.google.com/docs/firestore/quickstart
 
+2. Go to firebase console --> build --> open firestore database service.
 
-## For Reset Password go to App.jsx ##
+3. Create Database
 
-https://firebase.google.com/docs/auth/web/manage-users#send_a_password_reset_email
+4. Select location of database --> ex: mubmai
 
+5. Start in Test mode 
 
-## For Signup / SignIn data with phone number go to App.jsx file ##
+6. Create instance of firestore database in firebase config file and export it.
 
-https://firebase.google.com/docs/auth/web/phone-auth
+<!--* import { getFirestore } from "firebase/firestore"; -->
 
+<!--* export const db = getFirestore(app); -->
 
-## For Signup / SignIn data with google go to App.jsx file ##
+7. Write data. -->  https://firebase.google.com/docs/firestore/quickstart#add_data
 
-https://firebase.google.com/docs/auth/web/google-signin
+8. Read data there are three types: single data, all collection data & condition based data. -->  https://firebase.google.com/docs/firestore/quickstart#read_data
 
-
-## For Signup / SignIn data with facebook go to App.jsx file ##
-
-https://firebase.google.com/docs/auth/web/facebook-login
-
-
-## For Signup / SignIn data with github go to App.jsx file ##
-
-https://firebase.google.com/docs/auth/web/github-auth
-
-
-## For Signup / SignIn data with apple go to App.jsx file ##
-
-https://firebase.google.com/docs/auth/web/apple
-
-
-## For Signup / SignIn data with twitter go to App.jsx file ##
-
-https://firebase.google.com/docs/auth/web/twitter-login
+# For Read / Write Data, go to FireStoreDatabase.jsx file #
