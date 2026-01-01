@@ -1,0 +1,645 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+.app-bg {
+  background: linear-gradient(120deg, #f6f8ff, #eef1ff);
+  min-height: 100vh;
+}
+
+.outlet-main{
+  margin-top: 100px;
+}
+
+/* Container */
+.auth-container {
+  margin-top: 100px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Card */
+.auth-card {
+  width: 360px;
+  min-height: 490px;
+  background: #fff;
+  padding: 25px 20px;
+  border-radius: 14px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Heading */
+.auth-card h2 {
+  text-align: center;
+  margin-bottom: 4px;
+  margin-top: 0 !important;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 1.5rem;
+}
+
+form {
+  width: 100%;
+}
+
+/* Inputs */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: 0.3s;
+}
+
+.form-group input:focus {
+  border-color: #4f46e5;
+}
+
+/* Forgot */
+.forgot-row {
+  text-align: right;
+  font-size: 13px;
+  color: #4f46e5;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+/* Primary Button */
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Divider */
+.divider {
+  text-align: center;
+  margin: 1.2rem 0;
+  position: relative;
+}
+
+.divider span {
+  background: #fff;
+  padding: 0 10px;
+  font-size: 13px;
+  color: #777;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: #ddd;
+  left: 0;
+  top: 50%;
+  z-index: -1;
+}
+
+/* Social Buttons */
+.btn-social-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.btn-social {
+  width: 35px;
+  height: 35px;
+  padding: 8px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 0.7rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-social.google {
+  border-color: #ea4335;
+  color: #ea4335;
+}
+
+.btn-social.github {
+  border-color: #000;
+  color: #000;
+}
+
+.btn-social.facebook {
+  border-color: #1e75ee;
+  color: #1e75ee;
+}
+
+/* Switch */
+.switch-auth {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 1rem;
+}
+
+.switch-auth span {
+  color: #4f46e5;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.loader-main {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+  /* position: relative; */
+  position: absolute;
+  top: 65%;
+}
+
+.loader::after,
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 3px solid #fc6262;
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: animloader 2s linear infinite;
+}
+
+.loader::after {
+  animation-delay: 1s;
+}
+
+@keyframes animloader {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* cityForm.css */
+
+.form-wrapper {
+  /* min-height: 100vh; */
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+}
+
+.city-form,
+.product-form {
+  width: 100%;
+  max-width: 380px;
+  padding: 30px;
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.city-form h2,
+.product-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  color: #fff;
+  outline: none;
+  font-size: 15px;
+}
+
+.input-group label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ddd;
+  pointer-events: none;
+  transition: 0.3s;
+  background: transparent;
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  top: -8px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.save-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #fff;
+  color: #764ba2;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.save-button:hover {
+  background: #f1f1f1;
+}
+
+.save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.home-main {
+  margin-top: 250px;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-main {
+  padding-top: 20px;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  margin: 0 auto;
+  width: 90%;
+  max-width: 1100px;
+  padding: 30px 24px 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px);
+  border-radius: 16px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.nav-logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: transparent;
+  display: flex;
+  align-items: end;
+  gap: 5px;
+}
+
+.nav-logo span {
+  color: #dd2c00;
+}
+
+.nav-links {
+  display: flex;
+  gap: 18px;
+}
+
+.nav-links a {
+  color: #444;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.nav-links a:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.nav-links a.active {
+  background: linear-gradient(135deg, #ffc400, #dd2c00);
+  color: #fff;
+}
+
+.logout-btn {
+  padding: 8px 14px;
+  background-color: #dd2c00;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Page background */
+.product-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px 20px;
+  padding: 24px;
+  /* height: 100vh; */
+  position: relative;
+}
+
+.crud-loader{
+  position: absolute;
+  top: 28.5%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+/* Card */
+.product-card {
+  height: fit-content;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.10);
+}
+
+/* Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.card-header h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0;
+  color: #111827;
+}
+
+/* Price badge */
+.price {
+  background: #ecfdf5;
+  color: #10b981;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Body */
+.card-body {
+  margin-top: 14px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.card-body p {
+  margin: 6px 0;
+}
+
+.date {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Actions */
+.card-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* Buttons */
+.btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+/* Update */
+.btn.edit {
+  background: #eef2ff;
+  color: #6366f1;
+}
+
+.btn.edit:hover {
+  background: #e0e7ff;
+}
+
+/* Delete */
+.btn.delete {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+.btn.delete:hover {
+  background: #fee2e2;
+}
+
+/* Button click feel */
+.btn:active {
+  transform: scale(0.97);
+}
+
+
+
+
+
+/* Phone icon */
+.btn-social.phone {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+/* Overlay */
+.otp-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* Modal */
+.otp-modal {
+  width: 400px;
+  background: #fff;
+  padding: 22px;
+  border-radius: 14px;
+  text-align: center;
+  animation: pop 0.3s ease;
+}
+
+/* Phone input */
+.phone-input {
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.country-code {
+  padding: 12px;
+  background: #f3f4f6;
+  font-weight: 600;
+}
+
+.phone-input input {
+  border: none;
+  padding: 12px;
+  flex: 1;
+  outline: none;
+}
+
+/* OTP */
+.otp-input {
+  width: 100%;
+  padding: 12px;
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 6px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 14px;
+}
+
+/* Cancel */
+.otp-cancel {
+  background: none;
+  border: none;
+  color: #ef4444;
+  margin-top: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* OTP container */
+.otp-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+/* OTP box */
+.otp-box {
+  width: 52px !important;
+  height: 52px;
+  border-radius: 10px;
+  border: 1.5px solid #ccc;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  outline: none;
+  transition: 0.2s;
+}
+
+/* Focused box */
+.otp-box-focus {
+  border-color: #4f46e5 !important;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+#notify-btn {
+  padding: 10px 20px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  text-shadow: none;
+  background: #008cff;
+  cursor: pointer;
+  box-shadow: transparent;
+  border: 1px solid #fff;
+  transition: 0.5s ease;
+  user-select: none;
+  margin-top: 20px;
+}
+
+#notify-btn:hover,
+#notify-btn:focus {
+  color: #ffffff;
+  background: #008cff;
+  border: 1px solid #008cff;
+  text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
+  box-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #008cff,
+    0 0 100px #008cff;
+}
