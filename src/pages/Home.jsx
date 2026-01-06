@@ -1,6 +1,7 @@
 import "../App.css";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import catchErrorMessage from "../utility/catchErrorMessage";
 
 
 
@@ -41,7 +42,7 @@ const Home = () => {
 
     const message = onMessage(messaging, async (payload) => {
 
-      //? onMessage() use for send foreground message. It takes two params first instance of messaging and second anonymous function which function take payload param.
+      //? onMessage() is used to send foreground message. It takes two params first instance of messaging and second anonymous function which function take payload param.
 
 
 
@@ -67,7 +68,7 @@ const Home = () => {
     });
 
 
-    
+
     return () => message();
 
   }, []);
@@ -76,7 +77,7 @@ const Home = () => {
 
 
 
-  // *****  Send notification  ***** ////
+  // *****  Send notification from firebase  ***** ////
 
   const handleNotification = async () => {
 
@@ -91,9 +92,24 @@ const Home = () => {
 
         const token = await getToken(messaging, { vapidKey: import.meta.env.VITE_FIREBASE_NOTIFICATION_KEY });
 
-        //? getToken() use for get token from perticular device & browser. It takes two params first instance of messaging and second object of vapidKey.
+        //? getToken() is used to get token from perticular device & browser. It takes two params first instance of messaging and second object of vapidKey.
 
 
+
+        if (!token) return;
+
+
+        if (!user) return;
+
+        // 🔹 user document ref
+        const userRef = doc(db, "users", user.uid);
+
+        // 🔹 token save / update
+        await setDoc(
+          userRef,
+          { notifyToken: token },
+          { merge: true } // ❗ existing data safe rahe
+        );
 
         console.log("🚀 Token:", token);
 

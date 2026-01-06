@@ -20,8 +20,13 @@ import {
 
 
 
-//? Import firestore database instances from firebase configuration.
-import { db } from "../config/firebase";
+//? Import firestore database & storage instances from firebase configuration.
+import { db, storage } from "../config/firebase";
+
+
+
+//? For delete image from storage.
+import { deleteObject, ref as imageRef } from "firebase/storage";
 
 
 
@@ -72,13 +77,13 @@ const CRUD = () => {
 
 
 
-    const ref = collection(db, "products");
-
-    //? collection() use for get reference of specific firestore collection. It takes two params first db instance and second name of collection where data will be stored.
-
-
-
     try {
+
+      const ref = collection(db, "products");
+
+      //? In this scenario, collection() is used to get a reference to a firestore collection. It takes two params first db instance and second name of collection where data will be stored.
+
+
 
       const res = await addDoc(ref, {
         productName: productName.trim(),
@@ -97,10 +102,10 @@ const CRUD = () => {
       await addDoc(collection(db, `products/${productId}/extraDetails`), {
         colour: colour.trim(),
         category: category.trim(),
-        tags: ["new", "trending"],
+        tags: ["New", "Trending"],
       });
 
-      //? addDoc() use for save data in database. It takes only one param which is collection().
+      //? addDoc() is used to save data in database. It takes only one param which is collection().
 
 
 
@@ -134,17 +139,17 @@ const CRUD = () => {
 
 
 
-    const ref = doc(db, "products", dataId);
-
-    //? doc() use for get reference of perticular single data. It takes three params first db instance, second name of collection and third is data id. 
-
-
-
     try {
+
+      const ref = doc(db, "products", dataId);
+
+      //? In this scenario, In this scenario, doc() is used to get a reference of perticular single data.and third is data id. 
+
+
 
       const res = await getDoc(ref);
 
-      //? getDoc() use for get data from database. It takes only one param which is reference of data.
+      //? getDoc() is used to get single data from database. It takes only one param which is reference of data.
 
 
 
@@ -153,7 +158,7 @@ const CRUD = () => {
         return;
       }
 
-      console.log({ id: res?.id, ...res?.data() });
+      console.log({ id: res?.id, ...res?.data() }); ///? data() ---> Get data in object format.
 
     }
 
@@ -175,25 +180,25 @@ const CRUD = () => {
 
 
 
-    const ref = collection(db, "products");
-
-    //? collection() use for get reference of multiple data. It takes two params first db instance and second name of collection. 
-
-
-
-    const newestAtTop = query(ref, orderBy("createdAt", "desc"));
-
-    //? query() use for create reference of filtered data. It takes two params first collection reference and second many query constraints (where, orderBy, limit, etc.).  
-
-    //? orderBy() use for sort data into ascending / descending order. It takes two params first value name and second asc / desc.
-
-
-
     try {
 
-      const res = await getDocs(newestAtTop);
+      const ref = collection(db, "products");
 
-      //? getDocs() use for get data from database. It takes only one param which is reference of data.
+      //? In this scenario, collection() is used to get a reference of multiple data. It takes two params first db instance and second name of collection. 
+
+
+
+      const latestAtTop = query(ref, orderBy("createdAt", "desc"));
+
+      //? query() is used to get a reference of filtered data. It takes two params first collection reference and second many query constraints (where, orderBy, limit, etc.).  
+
+      //? orderBy() is used to sort data into ascending / descending order. It takes two params first value name and second asc / desc.
+
+
+
+      const res = await getDocs(latestAtTop);
+
+      //? getDocs() is used to get multiple data from database. It takes only one param which is reference of data.
 
 
 
@@ -202,7 +207,7 @@ const CRUD = () => {
 
           const product = {
             id: doc.id,
-            ...doc.data(),
+            ...doc.data(), ///? data() ---> Get data in object format.
           };
 
 
@@ -211,7 +216,7 @@ const CRUD = () => {
 
           const subRes = await getDocs(subRef);
 
-          //? getDocs() use for get data from database. It takes only one param which is reference of data.
+          //? getDocs() is used to get multiple data from database. It takes only one param which is reference of data.
 
 
 
@@ -220,7 +225,7 @@ const CRUD = () => {
           if (!subRes.empty) {
             extraDetails = {
               id: subRes.docs[0].id,
-              ...subRes.docs[0].data(),
+              ...subRes.docs[0].data(), ///? data() ---> Get data in object format.
             };
           }
 
@@ -261,59 +266,59 @@ const CRUD = () => {
 
 
 
-    const ref = collection(db, "products");
-
-    //? collection() use for get reference of multiple data. It takes two params first db instance and second name of collection. 
-
-
-
-    // productName "jeans" na ho
-    const dataQuery = query(ref, where("productName", "!=", "jeans"));
-
-    // // productName "shirt" ho aur price 100 ya usse zyada ho
-    // const q3 = query(ref,  where("productName", "==", "shirt"), where("price", ">=", 100));
-
-    // // tags array me "new" ho
-    // const q6 = query(ref, where("tags", "array-contains", "new")); //// Work in array
-
-    // // tags array me "new" ya "trending" me se koi ek ho
-    // const q7 = query(ref, where("tags", "array-contains-any", ["new", "trending"])); //// Work in array
-
-    // // category in ["cloth", "jeans"]
-    // const q8 = query(ref, where("category", "in", ["cloth", "jeans"])); //// Not work in array
-
-    // // category not in ["cloth", "shoes"]
-    // const q9 = query(ref, where("category", "not-in", ["cloth", "shoes"])); //// Not work in array
-
-    // // newest product top me lane ke liye
-    // const q10 = query(ref, orderBy("createdAt", "desc"));
-
-    // // newest + category filter
-    // const q11 = query(ref, where("category", "==", "cloth"), orderBy("createdAt", "desc"));
-
-    // // price ke hisaab se sasta → mehnga
-    // const q12 = query(ref, orderBy("price", "asc"));
-
-    // // sirf top 5 newest products
-    // const q13 = query(ref, orderBy("createdAt", "desc"), limit(5));
-
-
-    //? query() use for create reference of filtered data. It takes two params first collection reference and second many query constraints (where, orderBy, limit, etc.). 
-
-    //? where() use for filter data based on a condition. It takes three params first key of data, second conditional operator and third value of data.
-
-
-
     try {
+
+      const ref = collection(db, "products");
+
+      //? In this scenario, collection() is used to get a reference of multiple data. It takes two params first db instance and second name of collection. 
+
+
+
+      // productName "jeans" na ho
+      const dataQuery = query(ref, where("productName", "!=", "jeans"));
+
+      // // productName "shirt" ho aur price 100 ya usse zyada ho
+      // const q3 = query(ref,  where("productName", "==", "shirt"), where("price", ">=", 100));
+
+      // // tags array me "New" ho
+      // const q6 = query(ref, where("tags", "array-contains", "New")); //// Work in array
+
+      // // tags array me "New" ya "Trending" me se koi ek ho
+      // const q7 = query(ref, where("tags", "array-contains-any", ["New", "Trending"])); //// Work in array
+
+      // // category in ["cloth", "jeans"]
+      // const q8 = query(ref, where("category", "in", ["cloth", "jeans"])); //// Not work in array
+
+      // // category not in ["cloth", "shoes"]
+      // const q9 = query(ref, where("category", "not-in", ["cloth", "shoes"])); //// Not work in array
+
+      // // newest product top me lane ke liye
+      // const q10 = query(ref, orderBy("createdAt", "desc"));
+
+      // // newest + category filter
+      // const q11 = query(ref, where("category", "==", "cloth"), orderBy("createdAt", "desc"));
+
+      // // price ke hisaab se sasta → mehnga
+      // const q12 = query(ref, orderBy("price", "asc"));
+
+      // // sirf top 5 newest products
+      // const q13 = query(ref, orderBy("createdAt", "desc"), limit(5));
+
+
+      //? query() is used to get a reference of filtered data. It takes two params first collection reference and second many query constraints (where, orderBy, limit, etc.). 
+
+      //? where() is used to filter data based on a condition. It takes three params first key of data, second conditional operator and third value of data.
+
+
 
       const res = await getDocs(dataQuery);
 
-      //? getDocs() use for get data from database. It takes only one param which is reference of query data.
+      //? getDocs() is used to get multiple data from database. It takes only one param which is reference of query data.
 
 
 
       res?.docs?.map(doc =>
-        setProductData({ id: doc?.id, ...doc?.data() })
+        setProductData({ id: doc?.id, ...doc?.data() }) ///? data() ---> Get data in object format. 
       );
 
     }
@@ -328,9 +333,9 @@ const CRUD = () => {
 
 
 
-  // *****  Update Data  ***** ////
+  // *****  Update data  ***** ////
 
-  const updateProduct = async (dataId) => {
+  const updateProduct = async (dataId, imageUrl) => {
 
     const productPrice = Number(price);
 
@@ -354,17 +359,38 @@ const CRUD = () => {
 
 
 
-    const ref = doc(db, "products", updateProduct.id);
-
-
-
-    const subRef = doc(db, `products/${updateProduct.id}/extraDetails/${updateProduct.extraDetails.id}`);
-
-    //? doc() use for get reference of perticular single data. It takes three params first db instance, second name of collection and third is data id. 
-
-
-
     try {
+
+      ///! *** Old uploaded image delete logic is required when the file name is included in the storage path.  
+      if (imageUrl && productData?.product_img && imageUrl !== productData?.product_img) {
+
+        try {
+
+          const imgReference = imageRef(storage, imageUrl);
+
+          //? ref as imageRef() is used to get a reference of perticular image from storage. It takes two params first storage instance and second pass imageUrl.
+
+
+
+          await deleteObject(imgReference);
+
+          //? deleteObject() is used to delete image from storage. It takes only one param which is reference of image url.
+
+        } catch (err) { toast.info("Image not found or already deleted"); }
+
+      }
+
+
+
+      const ref = doc(db, "products", updateProduct.id);
+
+
+
+      const subRef = doc(db, `products/${updateProduct.id}/extraDetails/${updateProduct.extraDetails.id}`);
+
+      //? In this scenario, In this scenario, doc() is used to get a reference of perticular single data.and third is data id. 
+
+
 
       await Promise.all([
         updateDoc(ref, {
@@ -379,7 +405,7 @@ const CRUD = () => {
           category: category.trim()
         })
 
-        //? updateDoc() use for update data in database. Return undefined. It takes two params first reference of data and second pass the updated data.
+        //? updateDoc() is used to update data in database. Return undefined. It takes two params first reference of data and second pass the updated data.
       ]);
 
 
@@ -408,25 +434,66 @@ const CRUD = () => {
 
 
 
-  // *****  Delete Data  ***** ////
+  // *****  Delete data  ***** ////
 
-  const deleteProduct = async (dataId) => {
+  const deleteProduct = async (dataId, imageUrl) => {
 
     setIsLoading(true);
 
 
 
-    const ref = doc(db, "products", dataId);
-
-    //? doc() use for get reference of perticular single data. It takes three params first db instance, second name of collection and third is data id. 
-
-
-
     try {
 
-      await deleteDoc(ref);
+      //? ***  Delete image from storage.  
+      if (imageUrl) {
 
-      //? deleteDoc() use for delete data in database. Return undefined. It takes only one param which is reference of data.
+        try {
+
+          const imgReference = imageRef(storage, imageUrl);
+
+          //? ref as imageRef() is used to get a reference of perticular image from storage. It takes two params first storage instance and second pass imageUrl.
+
+
+
+          await deleteObject(imgReference);
+
+          //? deleteObject() is used to delete image from storage. It takes only one param which is reference of image url.
+
+        } catch (err) { toast.info("Image not found or already deleted"); }
+
+      }
+
+
+
+      const ref = doc(db, "products", dataId);
+
+      //? In this scenario, doc() is used to get a reference of perticular single data. It takes three params first db instance, second name of collection and third is data id. 
+
+
+
+      const subColletion = collection(db, `products/${dataId}/extraDetails`);
+
+      //? In this scenario, collection() is used to get a reference of multiple data of sub-collection. It takes two params first db instance and second name of collection. 
+
+
+
+      const subRef = await getDocs(subColletion);
+
+      //? getDocs() is used to get multiple data from database. It takes only one param which is reference of data.
+
+
+
+      await Promise.all(
+        subRef?.docs?.map(subRes => deleteDoc(
+          doc(db, `products/${dataId}/extraDetails`, subRes.id)
+        ))
+      ); ////? SubCollection data delete.
+
+
+
+      await deleteDoc(ref); ////? Parent data delete.
+
+      //? deleteDoc() is used to delete data in database. Return undefined. It takes only one param which is reference of data.
 
 
 
@@ -452,36 +519,42 @@ const CRUD = () => {
     <div className="product-wrapper">
       {!isLoading ?
         Array.isArray(productData) && productData.length ? productData?.map(product => (
-          <div className="product-card" key={product?.id}>
+          <div className="product-card animated-red-border" key={product?.id}>
 
-            <div className="card-header">
-              <h3>{product?.productName}</h3>
-              <span className="price">₹{product?.price}</span>
+            <div className="product-card-img">
+              <img src={product?.product_img} alt="" />
             </div>
 
-            <div className="card-body">
-              <p><strong>Colour:</strong> {product?.extraDetails?.colour}</p>
-              <p><strong>Category:</strong> {product?.extraDetails?.category}</p>
+            <div className="product-card-content">
+              <div className="card-header">
+                <h3>{product?.productName}</h3>
+                <span className="price">₹{product?.price}</span>
+              </div>
 
-              {product?.extraDetails?.tags &&
-                <p><strong>Tags:</strong> {product?.extraDetails?.tags?.join(", ")}</p>
-              }
+              <div className="card-body">
+                <p><strong>Colour:</strong> {product?.extraDetails?.colour}</p>
+                <p><strong>Category:</strong> {product?.extraDetails?.category}</p>
 
-              <p className="date" style={{ marginTop: 20 }}>
-                <strong>Created At:</strong> {dayjs(product.createdAt.toDate()).format("DD/MM/YYYY hh:mm a")}
-              </p>
+                {product?.extraDetails?.tags &&
+                  <p><strong>Tags:</strong> {product?.extraDetails?.tags?.join(", ")}</p>
+                }
 
-              <p className="date">
-                <strong>Updated At:</strong> {dayjs(product.updatedAt.toDate()).format("DD/MM/YYYY hh:mm a")}
-              </p>
+                <p className="date" style={{ marginTop: 20 }}>
+                  <strong>Created At:</strong> {dayjs(product.createdAt.toDate()).format("DD/MM/YYYY hh:mm a")}
+                </p>
+
+                <p className="date">
+                  <strong>Updated At:</strong> {dayjs(product.updatedAt.toDate()).format("DD/MM/YYYY hh:mm a")}
+                </p>
+              </div>
+
+              <div className="card-actions">
+                <button className="btn edit" onClick={() => navigate("/firestore-db", { state: product })}>Update</button>
+
+                <button className="btn delete" onClick={() => deleteProduct(product?.id, product?.product_img)}>Delete</button>
+              </div>
+
             </div>
-
-            <div className="card-actions">
-              <button className="btn edit" onClick={() => navigate("/firestore-db", { state: product })}>Update</button>
-
-              <button className="btn delete" onClick={() => deleteProduct(product?.id)}>Delete</button>
-            </div>
-
           </div>)) :
 
           <h1

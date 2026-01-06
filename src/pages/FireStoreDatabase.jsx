@@ -3,16 +3,12 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import catchErrorMessage from "../utility/catchErrorMessage";
+import UploadImage, { handleUpload } from "../components/UploadImage";
 
 
 
 //? For crud operation in firestore database.
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
-
-
-
-//? For upload data in firebase storage.
-import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 
 
@@ -22,7 +18,7 @@ import { serverTimestamp } from "firebase/firestore";
 
 
 //? Import firestore database instances from firebase configuration.
-import { db, storage } from "../config/firebase";
+import { db } from "../config/firebase";
 
 
 
@@ -42,11 +38,13 @@ const FireStoreDatabase = () => {
 
   const [category, setCategory] = useState("");
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState("save");
+
+  const [isUpdating, setIsUpdating] = useState("update");
+
+  const [isSavingOrUpdating, setIsSavingOrUpdating] = useState(false);
 
   const [file, setFile] = useState(null);
-
-  const [url, setUrl] = useState("");
 
 
 
@@ -87,35 +85,71 @@ const FireStoreDatabase = () => {
 
 
 
-    setIsLoading(true);
+    if (!updateProduct && !file) {
+      toast.error("Please select product image");
+      return;
+    }
+
+
+
+    setIsSavingOrUpdating(true);
 
 
 
     try {
 
+      setIsSaving("saving");
+
+
+
       if (!updateProduct) {
 
-        const res = await addDoc(collection(db, "products"), {
+        const ref = collection(db, "products");
+
+
+
+        const res = await addDoc(ref, {
           productName: productName.trim(),
           price: productPrice,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
 
+
+
         console.log(res);
 
 
 
-        //? *** For nested data entry in database. 
         const productId = res?.id;
 
+
+
+        //? *** For nested data entry in database. 
         await addDoc(collection(db, `products/${productId}/extraDetails`), {
           colour: colour.trim(),
           category: category.trim(),
-          tags: ["new", "trending"],
+          tags: ["New", "Trending"],
         });
 
 
+
+        //? *** For upload image in storage. 
+        let imageURL = "";
+
+
+
+        imageURL = await handleUpload(file, productId); /// <--- imageURL === returned the downloadURL from handleUpload()
+
+
+
+        await updateDoc(doc(db, "products", productId), {
+          product_img: imageURL,
+        });
+
+
+
+        navigate("/crud");
 
         toast.success("Data added successfully 🎉");
 
@@ -136,6 +170,9 @@ const FireStoreDatabase = () => {
 
       else {
 
+        setIsUpdating("updating");
+
+
         if (!updateProduct?.extraDetails?.id) {
           toast.error("Extra details not found");
           return;
@@ -149,10 +186,26 @@ const FireStoreDatabase = () => {
 
 
 
+        //? *** Update image in updating mode. 
+        const updateProductId = updateProduct?.id;
+
+
+
+        let oldImageURL = updateProduct?.product_img;
+
+
+
+        if (file) {
+          oldImageURL = await handleUpload(file, updateProductId); /// <--- imageURL === returned the downloadURL from handleUpload()
+        }
+
+
+
         await Promise.all([
           updateDoc(ref, {
             productName: productName.trim(),
             price: productPrice,
+            product_img: oldImageURL,
             updatedAt: serverTimestamp()
           }),
 
@@ -166,7 +219,9 @@ const FireStoreDatabase = () => {
 
         toast.success("Data updated successfully 🎉");
 
-        navigate(".", { replace: true }); ////? Navigate to same page
+        navigate("/crud");
+
+        // navigate(".", { replace: true }); ////? Navigate to same page
 
         setProductName("");
 
@@ -181,39 +236,7 @@ const FireStoreDatabase = () => {
 
     catch (err) { toast.error(catchErrorMessage(err)); }
 
-    finally { setIsLoading(false); }
-
-  };
-
-
-
-
-
-  // *****  Upload data in Storage  ***** ////
-
-  const handleUpload = async () => {
-
-    if (!file) return alert("Please select a file");
-
-
-    const fileRef = ref(storage, `uploads/${file.name}`);
-
-    //? ref() for create reference for upload location in storage. It takes two params first storage instance and second name of folder. 
-
-
-    await uploadBytes(fileRef, file);
-
-    //? uploadBytes() for upload data in storage. It takes two params first created reference of file and second uploaded file object from frontend. 
-
-
-    const downloadURL = await getDownloadURL(fileRef);
-
-    //? getDownloadURL() for create url for uploaded data. It takes only one param which is created reference of file.
-
-
-    setUrl(downloadURL);
-
-    toast.success("File uploaded successfully 🎉");
+    finally { setIsSavingOrUpdating(false); }
 
   };
 
@@ -266,8 +289,13 @@ const FireStoreDatabase = () => {
           <label>Category</label>
         </div>
 
-        <button className="save-button" type="submit" disabled={isLoading}>
-          {!updateProduct ? isLoading ? "Saving..." : "Save Data" : isLoading ? "Updating..." : "Update Data"}
+        <UploadImage file={file} setFile={setFile} updateProduct={updateProduct} />
+
+        <button className="save-button" type="submit" disabled={isSavingOrUpdating}>
+          {!updateProduct ?
+            isSaving !== "save" ? "Saving..." : "Save Data"
+            :
+            isUpdating !== "update" ? "Updating..." : "Update Data"}
         </button>
       </form>
     </div>

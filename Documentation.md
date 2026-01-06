@@ -4,6 +4,8 @@
 
 
 
+
+
 ◉ First we create firebase project folder in vs code. Then click the below link and follow the instructions.
 
 ## https://firebase.google.com/docs/web/setup  Documentation link for setup. ##
@@ -21,41 +23,67 @@
 <!--! Aama bdhi values .env file ma rakhvani -->
 
 import { initializeApp } from "firebase/app";
+import { getDatabase } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+import { getMessaging } from "firebase/messaging";
+
+
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
+
 
   //? For realtime database
   databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+
 
   //? For file storage
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_URL,
 };
 
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
+
 
 
 //? Create realtime database instance
 export const realTimeDB = getDatabase(app);
 
+
 //? Create authentication instance
 export const auth = getAuth(app);
+
 
 //? Create firestore database instance
 export const db = getFirestore(app);
 
-//? Create storage instance
+
+//? Create firebase storage instance
 export const storage = getStorage(app);
+
+
+//? Create cloud messaging instance
+export const messaging = getMessaging(app);
 
 
 
 6. Continue to the console.
 
 7. Setup is completed. --> Go to Project Dashboard and Use any services.
+
+
+
+
+
 
 
 
@@ -229,10 +257,16 @@ https://firebase.google.com/docs/auth/web/twitter-login
 
 <!--* export const db = getDatabase(app); -->
 
-8. Scroll down --> Read and write data. -->  https://firebase.google.com/docs/database/web/read-and-write
+8. Write data. -->  https://firebase.google.com/docs/database/web/read-and-write#basic_write
+
+9. Read data. -->  https://firebase.google.com/docs/database/web/read-and-write#read_data_once
+
+10. Update data. -->  https://firebase.google.com/docs/database/web/read-and-write#update_specific_fields
+
+11. Delete data. -->  https://firebase.google.com/docs/database/web/read-and-write#delete_data
 
 
-# For Read / Write Real Time Data, go to RealTimeDatabase.jsx file #
+# For realtime CRUD operation, go to RealTimeDatabase.jsx file #
 
 
 
@@ -269,7 +303,7 @@ https://firebase.google.com/docs/auth/web/twitter-login
 12. Show Timestamp date in code using .toDate(). --> like product.createdAt.toDate()
 
 
-# For CRUD Operation, go to CRUD.jsx & FireStoreDatabase.jsx file #
+# For CRUD operation, go to CRUD.jsx & FireStoreDatabase.jsx file #
 
 
 
@@ -300,7 +334,7 @@ https://firebase.google.com/docs/auth/web/twitter-login
 9. Create URL  https://firebase.google.com/docs/storage/web/download-files#download_data_via_url
 
 
-# For Upload Data in Storage, go to FireStoreDatabase.jsx file #
+# For upload data in storage, go to UploadImage.jsx file #
 
 
 

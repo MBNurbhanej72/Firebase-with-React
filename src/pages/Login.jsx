@@ -81,7 +81,7 @@ const Login = () => {
 
       const res = await signInWithEmailAndPassword(auth, email.trim(), password);
 
-      //? signInWithEmailAndPassword() use for sign in using email & password. It takes three params first auth, second email and third password.
+      //? signInWithEmailAndPassword() is used to login with an email & password. It takes three params first auth, second email and third password.
 
 
 
@@ -136,7 +136,7 @@ const Login = () => {
 
         const res = await signInWithPhoneNumber(auth, `+91${phone}`, window.recaptchaVerifier);
 
-        //? signInWithPhoneNumber() use for sign up & login using phone number. It takes three params first auth, second phone number and third window.recaptchaVerifier.
+        //? signInWithPhoneNumber() is used to login with a phone number. It takes three params first auth, second phone number and third window.recaptchaVerifier.
 
 
 
@@ -176,7 +176,7 @@ const Login = () => {
 
       await confirmation.confirm(otp);
 
-      //? confirmation.confirm(otp) use for check verificationId === otp or not.
+      //? confirmation.confirm(otp) is used to check verificationId === otp or not.
 
 
 
@@ -210,6 +210,7 @@ const Login = () => {
     setPhone("");
 
 
+
     //! This code add into logout funtion for remove Recaptcha verifier 
     //// if (window.recaptchaVerifier) {
     ////     window.recaptchaVerifier.clear(); //////? Remove from DOM
@@ -239,9 +240,9 @@ const Login = () => {
 
     try {
 
-      await sendPasswordResetEmail(auth, email.trim(), { url: "https://firebase-with-react-by-mb.vercel.app" });
+      await sendPasswordResetEmail(auth, email.trim(), { url: import.meta.env.VITE_LIVE_URL });
 
-      //? sendPasswordResetEmail() use for reset password using email. It takes three params first auth, second param pass email and third param optional which is {url: "https://firebase-with-react-by-mb.vercel.app"}. When we pass url then firebase reset password popup redirect to our website or when not pass url param so not redirect to our website. 
+      //? sendPasswordResetEmail() is used to reset password using email. It takes three params first auth, second param pass email and third param optional which is {url: import.meta.env.VITE_LIVE_URL}. When we pass url then firebase reset password popup redirect to our website or when not pass url param so not redirect to our website. 
 
 
 
@@ -274,7 +275,7 @@ const Login = () => {
 
       const res = await signInWithPopup(auth, googleProvider);
 
-      //? signInWithPopup() use for open Google popup. It takes two params first auth and second Google provider instance.
+      //? signInWithPopup() is used to open Google popup. It takes two params first auth and second Google provider instance.
 
 
 
@@ -322,7 +323,7 @@ const Login = () => {
 
       const res = await signInWithPopup(auth, gitHubProvider);
 
-      //? signInWithPopup() use for open GitHub popup. It takes two params first auth and second GitHub provider instance.
+      //? signInWithPopup() is used to open GitHub popup. It takes two params first auth and second GitHub provider instance.
 
 
 
@@ -370,7 +371,7 @@ const Login = () => {
 
       const res = await signInWithPopup(auth, facebookProvider);
 
-      //? signInWithPopup() use for open Facebook popup. It takes two params first auth and second Facebook provider instance.
+      //? signInWithPopup() is used to open Facebook popup. It takes two params first auth and second Facebook provider instance.
 
 
 

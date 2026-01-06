@@ -1,6 +1,6 @@
 const catchErrorMessage = (err) => {
 
-  // Firebase Auth / Firestore error
+  // *** Firebase Auth / Firestore error *** //
   if (err?.code) {
     return err.code
       .replace("auth/", "")
@@ -9,17 +9,26 @@ const catchErrorMessage = (err) => {
       .replace(/^\w/, (c) => c.toUpperCase());
   }
 
-  // Normal JS error
+
+  // *** API / Axios / Backend error *** //
+  if (err?.response?.data?.message) {
+    return err.response.data.message;
+  }
+
+
+  // *** Normal JS error *** //
   if (err?.message) {
     return err.message;
   }
 
-  // String error
+
+  // *** String error *** //
   if (typeof err === "string") {
     return err;
   }
 
-  // Fallback
+
+  // *** Fallback *** //
   return "Something went wrong. Please try again.";
 };
 

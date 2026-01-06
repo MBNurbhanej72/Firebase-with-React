@@ -81,7 +81,7 @@ const SignUp = () => {
 
       const res = await createUserWithEmailAndPassword(auth, email.trim(), password);
 
-      //? createUserWithEmailAndPassword() use for sign up using email & password. It takes three params first auth, second email and third password.
+      //? createUserWithEmailAndPassword() is used to sign up with an email & password. It takes three params first auth, second email and third password.
 
 
 
@@ -100,7 +100,7 @@ const SignUp = () => {
 
       // try {
 
-      //   await sendEmailVerification(user,{ url: "https://firebase-with-react-by-mb.vercel.app" });
+      //   await sendEmailVerification(user,{ url: import.meta.env.VITE_LIVE_URL });
 
 
 
@@ -161,7 +161,7 @@ const SignUp = () => {
 
         const res = await signInWithPhoneNumber(auth, `+91${phone}`, window.recaptchaVerifier);
 
-        //? signInWithPhoneNumber() use for sign up & login using phone number. It takes three params first auth, second phone number and third window.recaptchaVerifier.
+        //? signInWithPhoneNumber() is used to sign up with a phone number. It takes three params first auth, second phone number and third window.recaptchaVerifier.
 
 
 
@@ -243,7 +243,7 @@ const SignUp = () => {
     //! This code add into logout funtion for remove Recaptcha verifier 
     //// if (window.recaptchaVerifier) {
     ////     window.recaptchaVerifier.clear(); //////? Remove from DOM
-    ////     window.recaptchaVerifier = null;  //////? Remove rom memory
+    ////     window.recaptchaVerifier = null;  //////? Remove from memory
     //// } 
 
   };
@@ -267,7 +267,7 @@ const SignUp = () => {
 
       const res = await signInWithPopup(auth, googleProvider);
 
-      //? signInWithPopup() use for open Google popup. It takes two params first auth and second Google provider instance.
+      //? signInWithPopup() is used to open Google popup. It takes two params first auth and second Google provider instance.
 
 
 
@@ -315,7 +315,7 @@ const SignUp = () => {
 
       const res = await signInWithPopup(auth, gitHubProvider);
 
-      //? signInWithPopup() use for open GitHub popup. It takes two params first auth and second GitHub provider instance.
+      //? signInWithPopup() is used to open GitHub popup. It takes two params first auth and second GitHub provider instance.
 
 
 
@@ -363,7 +363,7 @@ const SignUp = () => {
 
       const res = await signInWithPopup(auth, facebookProvider);
 
-      //? signInWithPopup() use for open Facebook popup. It takes two params first auth and second Facebook provider instance.
+      //? signInWithPopup() is used to open Facebook popup. It takes two params first auth and second Facebook provider instance.
 
 
 

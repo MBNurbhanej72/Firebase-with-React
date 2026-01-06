@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import catchErrorMessage from "../utility/catchErrorMessage";
+import { RxCross2 } from "react-icons/rx";
 
 
 
@@ -18,6 +19,7 @@ import { onAuthStateChanged } from "firebase/auth";
 
 // ? For logout user.
 import { signOut } from "firebase/auth";
+import { HiMenu } from "react-icons/hi";
 
 
 
@@ -29,6 +31,8 @@ const Navbar = () => {
   const [user, setUser] = useState(undefined);
 
   const [isLoading, setIsLoading] = useState(true);
+
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
 
 
 
@@ -45,7 +49,7 @@ const Navbar = () => {
 
 
 
-    //? onAuthStateChanged() use for check user still login or not. It takes two params first is auth and second is callback function. In callback function we get currentUser.
+    //? onAuthStateChanged() is used to check user still login or not. It takes two params first is auth and second is callback function. In callback function we get currentUser.
 
   }, []);
 
@@ -67,7 +71,7 @@ const Navbar = () => {
 
       if (window.recaptchaVerifier) {
         window.recaptchaVerifier.clear(); ////? Remove from DOM
-        window.recaptchaVerifier = null;  ////? Remove rom memory
+        window.recaptchaVerifier = null;  ////? Remove from memory
       }
 
 
@@ -85,7 +89,6 @@ const Navbar = () => {
     finally { setIsLoading(false); }
 
   };
-
 
 
 
@@ -118,7 +121,33 @@ const Navbar = () => {
             </>
           }
         </div>
+
+        <HiMenu onClick={() => setIsOpenMenu(true)} color="black" size={25} className="menu-icon" />
       </nav>
+
+
+      <div className={`mobile-sidebar ${isOpenMenu ? "open" : ""}`}>
+        <div className="sidebar-header">
+          <RxCross2
+            onClick={() => setIsOpenMenu(false)}
+            size={28}
+            color="black"
+            className="close-btn"
+          />
+        </div>
+        <ul className="sidebar-menu list-unstyled">
+          <li><NavLink onClick={() => setIsOpenSidebar(false)} to="">Home</NavLink></li>
+          <li><NavLink onClick={() => setIsOpenSidebar(false)} to="realtime-db">RealTime Database</NavLink></li>
+          <li><NavLink onClick={() => setIsOpenSidebar(false)} to="firestore-db">FireStore Database</NavLink></li>
+          <li><NavLink onClick={() => setIsOpenSidebar(false)} to="crud">CRUD</NavLink></li>
+
+          <li><button className="logout-btn" onClick={handleLogOutUser}>Logout</button></li>
+        </ul>
+      </div>
+
+      {/* Background Overlay */}
+      {isOpenMenu && <div className="overlay"></div>}
+
     </div>
   );
 };
