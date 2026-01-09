@@ -15,7 +15,7 @@ import {
   updateDoc,
   deleteDoc,
   orderBy,
-  query
+  query, where
 } from "firebase/firestore";
 
 
@@ -37,12 +37,18 @@ const CRUD = () => {
 
   const [productData, setProductData] = useState([]);
 
+  console.log("🚀 ~ CRUD ~ productData:", productData);
+
   const [isLoading, setIsLoading] = useState(true);
 
 
 
   useEffect(() => {
+    // getProduct();
+
     getProducts();
+
+    // getProductsByQuery();
   }, []);
 
 
@@ -141,7 +147,7 @@ const CRUD = () => {
 
     try {
 
-      const ref = doc(db, "products", dataId);
+      const ref = doc(db, "products", "4laLsAUqfkC1SVZ7GuQu");
 
       //? In this scenario, In this scenario, doc() is used to get a reference of perticular single data.and third is data id. 
 
@@ -158,7 +164,9 @@ const CRUD = () => {
         return;
       }
 
-      console.log({ id: res?.id, ...res?.data() }); ///? data() ---> Get data in object format.
+
+
+      setProductData([{ id: res?.id, ...res?.data() }]); ///? data() ---> Get data in object format.
 
     }
 
@@ -203,6 +211,7 @@ const CRUD = () => {
 
 
       const allProducts = await Promise.all(
+
         res?.docs?.map(async (doc) => {
 
           const product = {
@@ -214,9 +223,12 @@ const CRUD = () => {
 
           const subRef = collection(db, `products/${doc.id}/extraDetails`);
 
+          //? In this scenario, collection() is used to get a reference of nested data. It takes two params first db instance and second name of collection. 
+
+
           const subRes = await getDocs(subRef);
 
-          //? getDocs() is used to get multiple data from database. It takes only one param which is reference of data.
+          //? In this scenario, getDocs() is used to get multiple data from subColletion. It takes only one param which is reference of data.
 
 
 
@@ -275,34 +287,34 @@ const CRUD = () => {
 
 
       // productName "jeans" na ho
-      const dataQuery = query(ref, where("productName", "!=", "jeans"));
+      const dataQuery = query(ref, where("productName", "!=", "Jeans"), orderBy("productName"));
 
       // // productName "shirt" ho aur price 100 ya usse zyada ho
-      // const q3 = query(ref,  where("productName", "==", "shirt"), where("price", ">=", 100));
+      // const dataQuery = query(ref, where("productName", "==", "Shirt"), where("price", ">=", 100), orderBy("price"));
 
       // // tags array me "New" ho
-      // const q6 = query(ref, where("tags", "array-contains", "New")); //// Work in array
+      // const dataQuery = query(ref, where("tags", "array-contains", "New")); //// Work in array
 
       // // tags array me "New" ya "Trending" me se koi ek ho
-      // const q7 = query(ref, where("tags", "array-contains-any", ["New", "Trending"])); //// Work in array
+      // const dataQuery = query(ref, where("tags", "array-contains-any", ["New", "Trending"])); //// Work in array
 
       // // category in ["cloth", "jeans"]
-      // const q8 = query(ref, where("category", "in", ["cloth", "jeans"])); //// Not work in array
+      // const dataQuery = query(ref, where("category", "in", ["cloth", "jeans"])); //// Not work in array
 
       // // category not in ["cloth", "shoes"]
-      // const q9 = query(ref, where("category", "not-in", ["cloth", "shoes"])); //// Not work in array
+      // const dataQuery = query(ref, where("category", "not-in", ["cloth", "shoes"])); //// Not work in array
 
       // // newest product top me lane ke liye
-      // const q10 = query(ref, orderBy("createdAt", "desc"));
+      // const dataQuery = query(ref, orderBy("createdAt", "desc"));
 
       // // newest + category filter
-      // const q11 = query(ref, where("category", "==", "cloth"), orderBy("createdAt", "desc"));
+      // const dataQuery = query(ref, where("category", "==", "cloth"), orderBy("createdAt", "desc"));
 
       // // price ke hisaab se sasta → mehnga
-      // const q12 = query(ref, orderBy("price", "asc"));
+      // const dataQuery = query(ref, orderBy("price", "asc"));
 
       // // sirf top 5 newest products
-      // const q13 = query(ref, orderBy("createdAt", "desc"), limit(5));
+      // const dataQuery = query(ref, orderBy("createdAt", "desc"), limit(5));
 
 
       //? query() is used to get a reference of filtered data. It takes two params first collection reference and second many query constraints (where, orderBy, limit, etc.). 
@@ -317,9 +329,53 @@ const CRUD = () => {
 
 
 
-      res?.docs?.map(doc =>
-        setProductData({ id: doc?.id, ...doc?.data() }) ///? data() ---> Get data in object format. 
+      const allProducts = await Promise.all(
+
+        res?.docs?.map(async (doc) => {
+
+          const product = {
+            id: doc.id,
+            ...doc.data(), ///? data() ---> Get data in object format.
+          };
+
+
+
+          const subRef = collection(db, `products/${doc.id}/extraDetails`);
+
+          //? In this scenario, collection() is used to get a reference of nested data. It takes two params first db instance and second name of collection. 
+
+
+          const subRes = await getDocs(subRef);
+
+          //? In this scenario, getDocs() is used to get multiple data from subColletion. It takes only one param which is reference of data.
+
+
+
+          let extraDetails = null;
+
+          if (!subRes.empty) {
+            extraDetails = {
+              id: subRes.docs[0].id,
+              ...subRes.docs[0].data(), ///? data() ---> Get data in object format.
+            };
+          }
+
+
+
+          return {
+            ...product,
+            extraDetails
+          };
+
+        })
+
+        //? Promise.all() waits for all promises. Executes when all promises return values. 
+
       );
+
+
+
+      setProductData(allProducts);
 
     }
 
@@ -473,13 +529,13 @@ const CRUD = () => {
 
       const subColletion = collection(db, `products/${dataId}/extraDetails`);
 
-      //? In this scenario, collection() is used to get a reference of multiple data of sub-collection. It takes two params first db instance and second name of collection. 
+      //? In this scenario, collection() is used to get a reference of nested data. It takes two params first db instance and second name of collection. 
 
 
 
       const subRef = await getDocs(subColletion);
 
-      //? getDocs() is used to get multiple data from database. It takes only one param which is reference of data.
+      //? In this scenario, getDocs() is used to get multiple data from subColletion. It takes only one param which is reference of data.
 
 
 
@@ -519,7 +575,7 @@ const CRUD = () => {
     <div className="product-wrapper">
       {!isLoading ?
         Array.isArray(productData) && productData.length ? productData?.map(product => (
-          <div className="product-card animated-red-border" key={product?.id}>
+          <div className="product-card" key={product?.id}>
 
             <div className="product-card-img">
               <img src={product?.product_img} alt="" />

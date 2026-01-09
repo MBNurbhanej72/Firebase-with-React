@@ -259,11 +259,19 @@ https://firebase.google.com/docs/auth/web/twitter-login
 
 8. Write data. -->  https://firebase.google.com/docs/database/web/read-and-write#basic_write
 
-9. Read data. -->  https://firebase.google.com/docs/database/web/read-and-write#read_data_once
+9. Read instant data. -->  https://firebase.google.com/docs/database/web/lists-of-data#listen_for_value_events
 
-10. Update data. -->  https://firebase.google.com/docs/database/web/read-and-write#update_specific_fields
+10. Read data. -->  https://firebase.google.com/docs/database/web/read-and-write#read_data_once
 
-11. Delete data. -->  https://firebase.google.com/docs/database/web/read-and-write#delete_data
+11. Update data. -->  https://firebase.google.com/docs/database/web/read-and-write#update_specific_fields
+
+12. Delete data. -->  https://firebase.google.com/docs/database/web/read-and-write#delete_data
+
+
+<!--! Add indexes for fields used in Realtime Database filtering queries -->
+ "cities": {
+   ".indexOn": ["cityName", "pincode"]
+ }
 
 
 # For realtime CRUD operation, go to RealTimeDatabase.jsx file #

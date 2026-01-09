@@ -136,12 +136,24 @@ const Navbar = () => {
           />
         </div>
         <ul className="sidebar-menu list-unstyled">
-          <li><NavLink onClick={() => setIsOpenSidebar(false)} to="">Home</NavLink></li>
-          <li><NavLink onClick={() => setIsOpenSidebar(false)} to="realtime-db">RealTime Database</NavLink></li>
-          <li><NavLink onClick={() => setIsOpenSidebar(false)} to="firestore-db">FireStore Database</NavLink></li>
-          <li><NavLink onClick={() => setIsOpenSidebar(false)} to="crud">CRUD</NavLink></li>
+          {!user ?
+            <>
+              <li><NavLink to="/login">Sign In</NavLink></li>
+              <li><NavLink to="/signup">Sign Up</NavLink></li>
+            </>
+            :
+            <>
+              <li><NavLink onClick={() => setIsOpenSidebar(false)} to="">Home</NavLink></li>
+              <li><NavLink onClick={() => setIsOpenSidebar(false)} to="realtime-db">RealTime Database</NavLink></li>
+              <li><NavLink onClick={() => setIsOpenSidebar(false)} to="firestore-db">FireStore Database</NavLink></li>
+              <li><NavLink onClick={() => setIsOpenSidebar(false)} to="crud">CRUD</NavLink></li>
 
-          <li><button className="logout-btn" onClick={handleLogOutUser}>Logout</button></li>
+              <li><button className="logout-btn" onClick={() => {
+                handleLogOutUser();
+                setIsOpenMenu(false);
+              }}>Logout</button></li>
+            </>
+          }
         </ul>
       </div>
 

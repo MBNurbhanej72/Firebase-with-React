@@ -63,7 +63,7 @@ const FireStoreDatabase = () => {
 
   // *****  Create data  ***** ////
 
-  const handleSubmit = async (e) => {
+  const handleSubmitOrUpdate = async (e) => {
 
     e.preventDefault();
 
@@ -246,7 +246,7 @@ const FireStoreDatabase = () => {
 
   return (
     <div className="form-wrapper">
-      <form className="product-form" onSubmit={handleSubmit}>
+      <form className="product-form" onSubmit={handleSubmitOrUpdate}>
         <h2>{updateProduct ? "Update" : "Add"} Product</h2>
 
         <div className="input-group">
