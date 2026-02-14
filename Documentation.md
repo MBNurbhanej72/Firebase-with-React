@@ -137,7 +137,8 @@ https://firebase.google.com/docs/auth/web/manage-users#send_a_password_reset_ema
 Sender name :- Company_Name
 From :- Company_Name
 Subject :- Reset Your Password – Project_Name 
-Message :- <p>Hello,</p>
+Message :- 
+  <p>Hello,</p>
 
   <p>
   We received a request to reset the password for your
